@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+	<insert id="insert" parameterType="postvo">
+		<![CDATA[
+			insert into 
+			POST VALUES(POST_SEQ.nextval, 
+				 		  #{categoryNo}, 
+						  #{title}, 
+						  #{content}, 
+						  sysdate)
+		]]>
+	</insert>
+
+	<select id="selectTop" resultType="postvo" parameterType="long">
+		<![CDATA[
+		SELECT *
+  			FROM (SELECT c.*, ROWNUM AS rn
+          FROM (  SELECT no,
+                         title,
+                         content,
+                         reg_date AS regDate
+                    FROM POST
+					where CATEGORY_NO = #{categoryNo}
+                ORDER BY reg_date DESC) c) d
+ 			WHERE d.rn = 1
+		]]>
+	</select>
+	<select id="selectAll" parameterType="long" resultType="postvo">
+		<![CDATA[
+		select no,category_no as categoryNo, title, reg_date as regDate from post 
+		where  category_no = #{categoryNo}
+		]]>
+	</select>
+	<select id="selectOne" parameterType="long" resultType="postvo">
+		<![CDATA[
+		select no,category_no as categoryNo, title, reg_date as regDate,content from post where no = #{no}
+		]]>
+	</select>
+</mapper>

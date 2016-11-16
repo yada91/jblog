@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+	<insert id="insert" parameterType="categoryvo">
+		<selectKey keyProperty="no" resultType="long" order="BEFORE">
+			<![CDATA[	
+			select
+				CATEGORY_SEQ.nextval
+			from dual
+			   	]]>
+		</selectKey>	
+	
+		<![CDATA[
+			insert INTO 
+			CATEGORY VALUES(#{no}, #{userNo}, #{name}, #{description}, sysdate)
+		]]>
+	</insert>
+
+
+	<select id="selectAll" parameterType="long" resultType="categoryvo">
+		<![CDATA[
+		SELECT c.no,
+      		   c.user_no AS userNo,
+     		   c.name,
+       		   c.description,
+               c.reg_date AS regDate,
+	           p.num
+ 	  		FROM CATEGORY c,
+      			 (  SELECT CATEGORY_NO, COUNT (*) as num
+           		   		 FROM POST
+        			GROUP BY CATEGORY_NO) p
+ 		WHERE p.CATEGORY_NO (+)= c.no
+ 		   	  AND c.USER_NO = #{no}
+ 		   	  
+		]]>
+	</select>
+
+	<select id="get" parameterType="long" resultType="categoryvo">
+		<![CDATA[
+			SELECT no,
+      		   user_no AS userNo,
+     		   name,
+       		   description,
+               reg_date AS regDate
+ 	  		FROM CATEGORY
+ 		WHERE  no = #{no}
+		]]>
+
+	</select>
+	<select id="getName" parameterType="long" resultType="categoryvo">
+		<![CDATA[
+		SELECT c.no, 
+     		   c.name
+ 	  		FROM CATEGORY c
+      	WHERE  c.USER_NO = #{no}
+ 		]]>
+	</select>
+	
+	<select id="getNameTop" parameterType="long" resultType="categoryvo">
+		<![CDATA[
+		SELECT *
+ 		 FROM (SELECT no, name, ROWNUM AS rn
+     		     FROM CATEGORY
+      		   WHERE USER_NO = #{no} ) c
+ 		WHERE c.rn = 1
+ 		]]>
+	</select>
+	
+	<delete id="delete" parameterType="long">
+	<![CDATA[
+		delete from category where no = #{no}
+ 		]]>
+	</delete>
+
+</mapper>
