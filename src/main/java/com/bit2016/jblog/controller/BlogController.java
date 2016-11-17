@@ -68,7 +68,7 @@ public class BlogController {
 	@RequestMapping(value = "/{id}/admin/basic", method = RequestMethod.POST)
 	public String basic(@PathVariable String id, @RequestParam("file") MultipartFile file, @ModelAttribute Blog blog) {
 		blogService.restore(file, blog);
-		return "blog/blog-admin-basic";
+		return "redirect:/" + id;
 	}
 
 	@Auth
@@ -80,4 +80,8 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 
+	@RequestMapping("abc/create")
+	public String create() {
+		return "blog/create";
+	}
 }
