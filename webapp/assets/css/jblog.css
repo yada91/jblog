@@ -85,6 +85,13 @@ div#content .admin-menu li.selected		{ font-weight:bold }
 div#content .admin-menu li:first-child	{ margin-left:0 }
 div#content .admin-menu a				{ font-weight:bold }
 
+
+div#smartcontent .admin-menu				{ height:20px; margin-top:15px; margin-bottom:10px }
+div#smartcontent .admin-menu li				{ float:left; margin-left:10px; }
+div#smartcontent .admin-menu li.selected	{ font-weight:bold }
+div#smartcontent .admin-menu li:first-child	{ margin-left:0 }
+div#smartcontent .admin-menu a				{ font-weight:bold }
+
 div#content .admin-config,
 div#content .admin-cat-add,
 div#content .admin-cat					{ border:none; width:720px; margin-top:30px }

@@ -1,6 +1,14 @@
 package com.bit2016.jblog.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bit2016.jblog.service.BlogService;
 import com.bit2016.jblog.vo.Blog;
+import com.bit2016.jblog.vo.Image;
 import com.bit2016.jblog.vo.Jusers;
 import com.bit2016.security.Auth;
 import com.bit2016.security.AuthUser;
@@ -80,8 +89,47 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 
-	@RequestMapping("abc/create")
-	public String create() {
-		return "blog/create";
+	@RequestMapping("/blog/{no}/image")
+	public void image(@PathVariable("no") Long no, HttpServletResponse response) throws IOException {
+		Image image = blogService.selectByNo(no);
+		if (image == null)
+			return;
+		String fileName = URLEncoder.encode(image.getSaveName(), "UTF-8");
+		response.setContentType(image.getMimeType());
+		response.setHeader("Content-Disposition", "filename=" + fileName + ";");
+		try (BufferedOutputStream output = new BufferedOutputStream(response.getOutputStream())) {
+			output.write(image.getData());
+		}
+	}
+
+	@Auth
+	@RequestMapping(value = "/blog/seupload", method = RequestMethod.POST)
+	public void image(HttpServletRequest request, HttpServletResponse response, @AuthUser Jusers authUser) {
+
+		try {
+			String fileName = request.getHeader("file-name");
+			int fileSize = Integer.parseInt(request.getHeader("file-size"));
+			InputStream input = request.getInputStream();
+			int count = 0;
+			byte[] data = new byte[fileSize];
+			while (count < fileSize)
+				count += input.read(data, count, data.length - count);
+
+			Image image = new Image();
+			image.setUserNo(authUser.getNo());
+			image.setPostNo(blogService.lastPostNo());
+			image.setSaveName(fileName);
+			image.setFileSize(fileSize);
+			image.setData(data);
+			Long no = blogService.insertImage(image);
+
+			String s = "&bNewLine=true&sFileName=" + fileName;
+			s += "&sFileURL=/jblog/blog/" + no + "/image";
+			PrintWriter out = response.getWriter();
+			out.print(s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

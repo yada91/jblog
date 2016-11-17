@@ -38,4 +38,11 @@
 		select no,category_no as categoryNo, title, reg_date as regDate,content from post where no = #{no}
 		]]>
 	</select>
+	<select id="lastNo" resultType="long">
+	<![CDATA[	
+			SELECT LAST_NUMBER
+ 				 FROM USER_SEQUENCES
+			WHERE SEQUENCE_NAME = 'POST_SEQ'
+			   	]]>
+	</select>
 </mapper>

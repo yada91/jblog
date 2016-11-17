@@ -6,11 +6,13 @@
 		<typeAlias alias="categoryvo" type="com.bit2016.jblog.vo.Category" />
 		<typeAlias alias="postvo" type="com.bit2016.jblog.vo.Post" />
 		<typeAlias alias="blogvo" type="com.bit2016.jblog.vo.Blog" />
+		<typeAlias alias="imagevo" type="com.bit2016.jblog.vo.Image" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mappers/juser.xml" />
 		<mapper resource="mybatis/mappers/category.xml" />
 		<mapper resource="mybatis/mappers/post.xml" />
 		<mapper resource="mybatis/mappers/blog.xml" />
+		<mapper resource="mybatis/mappers/image.xml" />
 	</mappers>
 </configuration>

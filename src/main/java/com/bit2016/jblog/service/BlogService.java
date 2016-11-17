@@ -13,10 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bit2016.jblog.DAO.BlogDAO;
 import com.bit2016.jblog.DAO.CategoryDAO;
+import com.bit2016.jblog.DAO.ImageDAO;
 import com.bit2016.jblog.DAO.JusersDAO;
 import com.bit2016.jblog.DAO.PostDAO;
 import com.bit2016.jblog.vo.Blog;
 import com.bit2016.jblog.vo.Category;
+import com.bit2016.jblog.vo.Image;
 import com.bit2016.jblog.vo.Jusers;
 import com.bit2016.jblog.vo.Post;
 
@@ -33,6 +35,8 @@ public class BlogService {
 	private JusersDAO juserDao;
 	@Autowired
 	private CategoryDAO categoryDao;
+	@Autowired
+	private ImageDAO imageDao;
 
 	public void insert(Jusers jusers) {
 		Blog blog = new Blog();
@@ -40,6 +44,15 @@ public class BlogService {
 		blog.setTitle(jusers.getId() + "의 블로그");
 		blog.setLogo("spring-logo.jpg");
 		blogDao.insert(blog);
+	}
+
+	public Long insertImage(Image image) {
+
+		return imageDao.insert(image);
+	}
+
+	public Image selectByNo(Long no) {
+		return imageDao.selectByNo(no);
 	}
 
 	public void restore(MultipartFile file, Blog blog) {
@@ -55,8 +68,26 @@ public class BlogService {
 
 			writeFile(file, saveFileName);
 			blog.setLogo(saveFileName);
-			System.out.println(blog);
 			blogDao.update(blog);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void restore(MultipartFile file, Long userNo) {
+		String saveFileName = "";
+		try {
+			if (file.isEmpty() == true) {
+				return;
+			}
+
+			String orgFileName = file.getOriginalFilename();
+			String extName = orgFileName.substring(orgFileName.lastIndexOf('.') + 1);
+			saveFileName = generateSaveFileName(extName);
+
+			writeFile(file, saveFileName);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -155,5 +186,9 @@ public class BlogService {
 		}
 		Blog blog = blogDao.get(no);
 		return blog;
+	}
+
+	public Long lastPostNo() {
+		return postDao.lastNo();
 	}
 }

@@ -29,4 +29,8 @@ public class PostDAO {
 	public Post selectOne(Long no) {
 		return sqlSession.selectOne("post.selectOne",no);
 	}
+	
+	public Long lastNo(){
+		return sqlSession.selectOne("post.lastNo");
+	}
 }
