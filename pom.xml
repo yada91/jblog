@@ -181,7 +181,7 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<configuration>
-					<url>http://127.0.0.1:8888/manager/text</url>
+					<url>http://127.0.0.1:8088/manager/text</url>
 					<path>/jblog</path>
 					<username>tomcat</username>
 					<password>tomcat</password>
